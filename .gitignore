@@ -1,0 +1,59 @@
+# 编译后的二进制文件
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# 测试二进制文件
+*.test
+
+# 覆盖率工具生成的输出文件
+*.out
+
+# 依赖目录
+/vendor/
+
+# Go工作区文件
+go.work
+
+# 编译输出目录
+/bin/
+/pkg/
+
+# IDE 和编辑器文件
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# 操作系统生成的文件
+.DS_Store
+Thumbs.db
+
+# 日志文件
+*.log
+
+# 环境变量文件
+.env
+
+# 临时文件
+tmp/
+temp/
+
+# 个人配置文件（可能包含敏感信息）
+config.yaml
+credentials.json
+
+# 腾讯云相关的临时文件或凭证（如果有）
+tencent_credentials.json
+
+# Golang workspace 文件
+*.code-workspace
+
+# 如果使用 Air 进行热重载，可以忽略它的临时文件
+.air.toml
+tmp/
+
+cloud-console
