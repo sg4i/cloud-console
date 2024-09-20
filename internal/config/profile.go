@@ -9,16 +9,10 @@ import (
 	"github.com/sg4i/cloud-console/internal/logger"
 )
 
-type ProfileConfig struct {
-	SecretId  string `json:"secretId"`
-	SecretKey string `json:"secretKey"`
-	Token     string `json:"token"`
-}
-
-func LoadCredentials(cmdSecretId, cmdSecretKey, cmdToken string) (*ProfileConfig, error) {
+func LoadCredentials(cmdSecretId, cmdSecretKey, cmdToken string) (*Credential, error) {
 	// 1. 命令行参数（最高优先级）
 	if cmdSecretId != "" && cmdSecretKey != "" {
-		return &ProfileConfig{
+		return &Credential{
 			SecretId:  cmdSecretId,
 			SecretKey: cmdSecretKey,
 			Token:     cmdToken,
@@ -30,7 +24,7 @@ func LoadCredentials(cmdSecretId, cmdSecretKey, cmdToken string) (*ProfileConfig
 	envSecretKey := os.Getenv("TENCENTCLOUD_SECRET_KEY")
 	envToken := os.Getenv("TENCENTCLOUD_TOKEN")
 	if envSecretId != "" && envSecretKey != "" {
-		return &ProfileConfig{
+		return &Credential{
 			SecretId:  envSecretId,
 			SecretKey: envSecretKey,
 			Token:     envToken,
@@ -41,7 +35,7 @@ func LoadCredentials(cmdSecretId, cmdSecretKey, cmdToken string) (*ProfileConfig
 	return loadFromCredentialFile()
 }
 
-func loadFromCredentialFile() (*ProfileConfig, error) {
+func loadFromCredentialFile() (*Credential, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		logger.Log.WithError(err).Error("无法获取用户主目录")
@@ -63,14 +57,14 @@ func loadFromCredentialFile() (*ProfileConfig, error) {
 	return nil, fmt.Errorf("未找到有效的凭证信息")
 }
 
-func loadCredential(path string) (*ProfileConfig, error) {
+func loadCredential(path string) (*Credential, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		logger.Log.WithError(err).WithField("path", path).Error("无法读取凭证文件")
 		return nil, err
 	}
 
-	var config ProfileConfig
+	var config Credential
 	if err := json.Unmarshal(data, &config); err != nil {
 		return nil, err
 	}
