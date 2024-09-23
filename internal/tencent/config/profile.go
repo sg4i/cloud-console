@@ -51,7 +51,7 @@ func LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdRoleArn, cmdSURL string
 	v.SetDefault("secretId", "")
 	v.SetDefault("secretKey", "")
 	v.SetDefault("token", "")
-	v.SetDefault("roleArn", "") // 将 arn 改为 roleArn
+	v.SetDefault("roleArn", "")
 	v.SetDefault("surl", "https://console.cloud.tencent.com")
 
 	// 命令行参数（最高优先级）
@@ -65,7 +65,7 @@ func LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdRoleArn, cmdSURL string
 		v.Set("token", cmdToken)
 	}
 	if cmdRoleArn != "" {
-		v.Set("roleArn", cmdRoleArn) // 将 arn 改为 roleArn
+		v.Set("roleArn", cmdRoleArn)
 	}
 	if cmdSURL != "" {
 		v.Set("surl", cmdSURL)
@@ -76,7 +76,7 @@ func LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdRoleArn, cmdSURL string
 		SecretId:  v.GetString("secretId"),
 		SecretKey: v.GetString("secretKey"),
 		Token:     v.GetString("token"),
-		RoleArn:   v.GetString("roleArn"), // 将 ARN 改为 RoleArn
+		RoleArn:   v.GetString("roleArn"),
 		SURL:      v.GetString("surl"),
 	}
 
