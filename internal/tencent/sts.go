@@ -3,7 +3,7 @@ package tencent
 import (
 	"fmt"
 
-	"github.com/sg4i/cloud-console/internal/config"
+	"github.com/sg4i/cloud-console/internal/tencent/config"
 	"github.com/sg4i/cloud-console/internal/logger"
 	"github.com/sirupsen/logrus"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
