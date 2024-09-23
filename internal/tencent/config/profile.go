@@ -26,7 +26,7 @@ func LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdRoleArn, cmdSURL string
 	v.BindEnv("SECRET_ID")
 	v.BindEnv("SECRET_KEY")
 	v.BindEnv("TOKEN")
-	v.BindEnv("ROLE_ARN") // 将 ARN 改为 ROLE_ARN
+	v.BindEnv("ROLE_ARN")
 	v.BindEnv("SURL")
 
 	// 设置配置文件
