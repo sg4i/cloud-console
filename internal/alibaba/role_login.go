@@ -8,6 +8,8 @@ import (
 	"net/url"
 
 	"github.com/sg4i/cloud-console/internal/alibaba/config"
+	"github.com/sg4i/cloud-console/internal/logger"
+	"github.com/sirupsen/logrus"
 )
 
 // RoleLoginParams 定义生成角色登录链接所需的参数
@@ -80,6 +82,11 @@ func GetSigninToken(credential config.Credential) (string, error) {
 	if err := json.Unmarshal(body, &tokenResp); err != nil {
 		return "", fmt.Errorf("解析响应JSON失败: %v", err)
 	}
+
+	logger.Log.WithFields(logrus.Fields{
+		"RequestId":   tokenResp.RequestId,
+		"SigninToken": tokenResp.SigninToken,
+	}).Debug("获取签名令牌响应")
 
 	return tokenResp.SigninToken, nil
 }

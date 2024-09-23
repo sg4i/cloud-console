@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/sg4i/cloud-console/internal/logger"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -38,7 +39,7 @@ func LoadProfile(cmdAccessKeyId, cmdAccessKeySecret, cmdSecurityToken, cmdRoleAr
 		return nil, fmt.Errorf("无法获取用户主目录: %w", err)
 	}
 
-	v.SetConfigName("config")
+	v.SetConfigName("default")
 	v.SetConfigType("yaml")
 	v.AddConfigPath(filepath.Join(homeDir, ".cloud-console", "alibaba"))
 
@@ -54,7 +55,7 @@ func LoadProfile(cmdAccessKeyId, cmdAccessKeySecret, cmdSecurityToken, cmdRoleAr
 	v.SetDefault("accessKeySecret", "")
 	v.SetDefault("securityToken", "")
 	v.SetDefault("roleArn", "")
-	v.SetDefault("destination", "")
+	v.SetDefault("destination", "https://console.aliyun.com")
 	v.SetDefault("loginUrl", "https://signin.aliyun.com/federation")
 
 	// 命令行参数（最高优先级）
@@ -86,6 +87,13 @@ func LoadProfile(cmdAccessKeyId, cmdAccessKeySecret, cmdSecurityToken, cmdRoleAr
 		Destination:     v.GetString("destination"),
 		LoginUrl:        v.GetString("loginUrl"),
 	}
+	logger.Log.WithFields(logrus.Fields{
+		"AccessKeyId":     profile.AccessKeyId,
+		"SecurityToken":   profile.SecurityToken,
+		"RoleArn":         profile.RoleArn,
+		"Destination":     profile.Destination,
+		"LoginUrl":        profile.LoginUrl,
+	}).Debug("Profile 配置信息")
 
 	// 验证必要的凭证信息
 	if profile.AccessKeyId == "" || profile.AccessKeySecret == "" {

@@ -3,9 +3,10 @@ package engine
 import (
 	"fmt"
 
+	"github.com/sg4i/cloud-console/internal/alibaba"
 	"github.com/sg4i/cloud-console/internal/alibaba/config"
 	"github.com/sg4i/cloud-console/internal/logger"
-	"github.com/sg4i/cloud-console/internal/alibaba"
+	"github.com/sirupsen/logrus"
 )
 
 func GenerateAlibabaRoleLoginURL(cmdAccessKeyId, cmdAccessKeySecret, cmdSecurityToken, cmdRoleArn, cmdDestination, cmdLoginUrl string) (string, error) {
@@ -16,7 +17,10 @@ func GenerateAlibabaRoleLoginURL(cmdAccessKeyId, cmdAccessKeySecret, cmdSecurity
 
 	// 如果没有有效的 SecurityToken，则使用 AssumeRole 获取临时密钥
 	if profile.SecurityToken == "" {
-		tempCred, err := alibaba.AssumeRole(profile.AccessKeyId, profile.AccessKeySecret, profile.RoleArn)
+		opts := &alibaba.AssumeRoleOptions{
+			RoleArn: profile.RoleArn,
+		}
+		tempCred, err := alibaba.AssumeRole(profile.AccessKeyId, profile.AccessKeySecret, opts)
 		if err != nil {
 			return "", fmt.Errorf("获取临时密钥失败: %w", err)
 		}
@@ -34,6 +38,12 @@ func GenerateAlibabaRoleLoginURL(cmdAccessKeyId, cmdAccessKeySecret, cmdSecurity
 			SecurityToken:   profile.SecurityToken,
 		},
 	}
+	logger.Log.WithFields(logrus.Fields{
+		"LoginURL":      params.LoginURL,
+		"Destination":   params.Destination,
+		"AccessKeyId":   params.Credential.AccessKeyId,
+		"SecurityToken": params.Credential.SecurityToken,
+	}).Debug("生成阿里云角色登录 URL 参数")
 
 	url, err := alibaba.GenerateRoleLoginURL(params)
 	if err != nil {

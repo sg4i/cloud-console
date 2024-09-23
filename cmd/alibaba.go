@@ -26,9 +26,9 @@ var alibabaCmd = &cobra.Command{
 			alibabaAccessKeyId,
 			alibabaAccessKeySecret,
 			alibabaSecurityToken,
-			alibabaLoginURL,
-			alibabaDestination,
 			alibabaRoleArn,
+			alibabaDestination,
+			alibabaLoginURL,
 		)
 		if err != nil {
 			logger.Log.WithError(err).Error("生成阿里云角色登录 URL 失败")
@@ -45,8 +45,8 @@ func init() {
 	alibabaCmd.Flags().StringVar(&alibabaAccessKeyId, "access-key-id", "", "阿里云 AccessKeyId")
 	alibabaCmd.Flags().StringVar(&alibabaAccessKeySecret, "access-key-secret", "", "阿里云 AccessKeySecret")
 	alibabaCmd.Flags().StringVar(&alibabaSecurityToken, "security-token", "", "阿里云 SecurityToken（可选）")
-	alibabaCmd.Flags().StringVar(&alibabaLoginURL, "login-url", "", "登录 URL（可选）")
-	alibabaCmd.Flags().StringVar(&alibabaDestination, "destination", "", "目标 URL（可选）")
+	alibabaCmd.Flags().StringVar(&alibabaLoginURL, "login-url", "https://signin.aliyun.com/federation", "登录 URL（可选）")
+	alibabaCmd.Flags().StringVar(&alibabaDestination, "destination", "https://console.aliyun.com", "目标 URL（可选）")
 	alibabaCmd.Flags().StringVar(&alibabaRoleArn, "role-arn", "", "阿里云角色 ARN（可选）")
 
 	// alibabaCmd.MarkFlagRequired("access-key-id")
