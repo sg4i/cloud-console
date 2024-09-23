@@ -14,11 +14,11 @@ type Profile struct {
 	SecretId  string
 	SecretKey string
 	Token     string
-	ARN       string
+	RoleArn   string // 将 ARN 改为 RoleArn
 	SURL      string
 }
 
-func LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdARN, cmdSURL string) (*Profile, error) {
+func LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdRoleArn, cmdSURL string) (*Profile, error) {
 	v := viper.New()
 
 	// 设置配置键
@@ -26,7 +26,7 @@ func LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdARN, cmdSURL string) (*
 	v.BindEnv("SECRET_ID")
 	v.BindEnv("SECRET_KEY")
 	v.BindEnv("TOKEN")
-	v.BindEnv("ARN")
+	v.BindEnv("ROLE_ARN") // 将 ARN 改为 ROLE_ARN
 	v.BindEnv("SURL")
 
 	// 设置配置文件
@@ -38,7 +38,7 @@ func LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdARN, cmdSURL string) (*
 
 	v.SetConfigName("default")
 	v.SetConfigType("yaml")
-	v.AddConfigPath(filepath.Join(homeDir, ".cloud-console"))
+	v.AddConfigPath(filepath.Join(homeDir, ".cloud-console", "tencent"))
 
 	// 读取配置文件
 	if err := v.ReadInConfig(); err != nil {
@@ -51,7 +51,7 @@ func LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdARN, cmdSURL string) (*
 	v.SetDefault("secretId", "")
 	v.SetDefault("secretKey", "")
 	v.SetDefault("token", "")
-	v.SetDefault("arn", "")
+	v.SetDefault("roleArn", "") // 将 arn 改为 roleArn
 	v.SetDefault("surl", "https://console.cloud.tencent.com")
 
 	// 命令行参数（最高优先级）
@@ -64,8 +64,8 @@ func LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdARN, cmdSURL string) (*
 	if cmdToken != "" {
 		v.Set("token", cmdToken)
 	}
-	if cmdARN != "" {
-		v.Set("arn", cmdARN)
+	if cmdRoleArn != "" {
+		v.Set("roleArn", cmdRoleArn) // 将 arn 改为 roleArn
 	}
 	if cmdSURL != "" {
 		v.Set("surl", cmdSURL)
@@ -76,7 +76,7 @@ func LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdARN, cmdSURL string) (*
 		SecretId:  v.GetString("secretId"),
 		SecretKey: v.GetString("secretKey"),
 		Token:     v.GetString("token"),
-		ARN:       v.GetString("arn"),
+		RoleArn:   v.GetString("roleArn"), // 将 ARN 改为 RoleArn
 		SURL:      v.GetString("surl"),
 	}
 
@@ -85,8 +85,8 @@ func LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdARN, cmdSURL string) (*
 		return nil, fmt.Errorf("缺少必要的凭证信息")
 	}
 
-	// 新增验证：当 token 为空时，arn 不能为空
-	if profile.Token == "" && profile.ARN == "" {
+	// 新增验证：当 token 为空时，roleArn 不能为空
+	if profile.Token == "" && profile.RoleArn == "" {
 		return nil, fmt.Errorf("使用永久密钥时需指定角色 ARN")
 	}
 

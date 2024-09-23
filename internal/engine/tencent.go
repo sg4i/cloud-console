@@ -10,15 +10,15 @@ import (
 	"github.com/sg4i/cloud-console/internal/tencent"
 )
 
-func GenerateTencentRoleLoginURL(cmdSecretId, cmdSecretKey, cmdToken, cmdSUrl, cmdARN string) (string, error) {
-	profile, err := config.LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdARN, cmdSUrl)
+func GenerateTencentRoleLoginURL(cmdSecretId, cmdSecretKey, cmdToken, cmdSUrl, cmdRoleArn string) (string, error) {
+	profile, err := config.LoadProfile(cmdSecretId, cmdSecretKey, cmdToken, cmdRoleArn, cmdSUrl)
 	if err != nil {
 		return "", fmt.Errorf("加载配置文件失败: %w", err)
 	}
 
 	// 如果没有有效的 token，则使用 AssumeRole 获取临时密钥
 	if profile.Token == "" {
-		tempCred, err := tencent.AssumeRole(profile.SecretId, profile.SecretKey, &tencent.AssumeRoleOptions{RoleArn: profile.ARN})
+		tempCred, err := tencent.AssumeRole(profile.SecretId, profile.SecretKey, &tencent.AssumeRoleOptions{RoleArn: profile.RoleArn})
 		if err != nil {
 			return "", fmt.Errorf("获取临时密钥失败: %w", err)
 		}
