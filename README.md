@@ -73,11 +73,14 @@ API:
 TicketType
 
 - 若类型为normal
-  - DMS域名为http://dms.aliyun.com
+  - DMS域名： dms.aliyun.com
+  - SLS域名：sls.console.aliyun.com
+  - 数据库自治服务: hdm.console.aliyun.com
 
 - 类型为mini，则一般应用于BID虚拟商
-  - DMS域名为http://dms-jst4service.aliyun.com、http://dms-Itwo4service.aliyun.com
+  - DMS域名为 dms-jst4service.aliyun.com、 dms-Itwo4service.aliyun.com
   - SLS域名：sls4service.console.aliyun.com
+  - 数据库自治服务:  hdm4service.console.aliyun.com
 
 ### REF
 
