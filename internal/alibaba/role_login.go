@@ -61,7 +61,7 @@ func GetSigninToken(credential config.Credential) (string, error) {
 	formData.Set("AccessKeyId", credential.AccessKeyId)
 	formData.Set("AccessKeySecret", credential.AccessKeySecret)
 	formData.Set("SecurityToken", credential.SecurityToken)
-	formData.Set("TicketType", "mini")
+	formData.Set("TicketType", "normal")
 
 	resp, err := http.PostForm(baseURL, formData)
 	if err != nil {
