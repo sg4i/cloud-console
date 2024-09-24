@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/sg4i/cloud-console/internal/engine"
 	"github.com/sg4i/cloud-console/internal/logger"
+	"github.com/sg4i/cloud-console/internal/utils"
 )
 
 var (
@@ -18,7 +19,7 @@ var (
 
 var tencentCmd = &cobra.Command{
 	Use:   "tencent",
-	Short: "Generate Tencent Cloud role login URL",
+	Short: "生成腾讯云角色登录 URL",
 	Run: func(cmd *cobra.Command, args []string) {
 		url, err := engine.GenerateTencentRoleLoginURL(tencentSecretId, tencentSecretKey, tencentToken, tencentSUrl, tencentRoleArn)
 		if err != nil {
@@ -27,6 +28,14 @@ var tencentCmd = &cobra.Command{
 		}
 		fmt.Println("腾讯云角色登录 URL:")
 		fmt.Println(url)
+
+		if autoLogin {
+			err = utils.OpenURL(url)
+			if err != nil {
+				logger.Log.WithError(err).Error("自动打开 URL 失败")
+				fmt.Println("自动打开 URL 失败:", err)
+			}
+		}
 	},
 }
 

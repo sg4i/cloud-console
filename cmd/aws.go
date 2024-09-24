@@ -5,6 +5,7 @@ import (
 
 	"github.com/sg4i/cloud-console/internal/engine"
 	"github.com/sg4i/cloud-console/internal/logger"
+	"github.com/sg4i/cloud-console/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -36,6 +37,14 @@ var awsCmd = &cobra.Command{
 			return
 		}
 		fmt.Println("AWS 角色登录 URL:", url)
+
+		if autoLogin {
+			err = utils.OpenURL(url)
+			if err != nil {
+				logger.Log.WithError(err).Error("自动打开 URL 失败")
+				fmt.Println("自动打开 URL 失败:", err)
+			}
+		}
 	},
 }
 
