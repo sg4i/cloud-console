@@ -56,4 +56,6 @@ tencent_credentials.json
 .air.toml
 tmp/
 
-cloud-console
+cloudconsole
+
+develop.md
