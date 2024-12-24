@@ -12,8 +12,8 @@ type Provider string
 
 const (
 	ProviderTencent Provider = "tencent"
-	ProviderAli     Provider = "ali"
-	ProviderAWS     Provider = "aws"
+	ProviderAlibaba Provider = "ali"
+	ProviderAws     Provider = "aws"
 )
 
 // Options 定义Console的配置选项
@@ -51,7 +51,7 @@ func (c *Console) GetLoginURL(opts *LoginOptions) (string, error) {
 }
 
 // NewLoginOptions 创建登录选项
-func NewLoginOptions(secretId, secretKey, token, roleArn, destination string) *LoginOptions {
+func NewLoginOptions(secretId, secretKey, token, roleArn, destination, loginURL string) *LoginOptions {
 	return &LoginOptions{
 		BaseLoginOptions: service.BaseLoginOptions{
 			Credential: &provider.Credential{
@@ -61,6 +61,7 @@ func NewLoginOptions(secretId, secretKey, token, roleArn, destination string) *L
 			},
 			RoleArn:     roleArn,
 			Destination: destination,
+			LoginURL:    loginURL,
 		},
 	}
 }

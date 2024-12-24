@@ -6,7 +6,15 @@ import (
 )
 
 func initCliCommands(group *cobra.Group) {
-	cliCmd := cli.NewTencentCmd()
-	cliCmd.GroupID = group.ID
-	RootCmd.AddCommand(cliCmd)
+	tencentCmd := cli.NewTencentCmd()
+	tencentCmd.GroupID = group.ID
+	RootCmd.AddCommand(tencentCmd)
+
+	alibabaCmd := cli.NewAlibabaCmd()
+	alibabaCmd.GroupID = group.ID
+	RootCmd.AddCommand(alibabaCmd)
+
+	awsCmd := cli.NewAWSCmd()
+	awsCmd.GroupID = group.ID
+	RootCmd.AddCommand(awsCmd)
 }

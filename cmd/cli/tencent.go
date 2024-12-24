@@ -51,7 +51,7 @@ func run() func(cmd *cobra.Command, args []string) {
 		}
 
 		// 创建登录选项
-		loginOpts := console.NewLoginOptions(secretId, secretKey, token, roleArn, destination)
+		loginOpts := console.NewLoginOptions(secretId, secretKey, token, roleArn, destination, "")
 
 		// 获取登录 URL
 		url, err := c.GetLoginURL(loginOpts)
