@@ -1,0 +1,28 @@
+
+provider:
+  tencent:
+    credential:
+      secretId:
+      secretKey:
+      token:
+    roleArn:
+    destination: "https://console.cloud.tencent.com"
+  alibaba:
+    credential:
+      secretId:
+      secretKey:
+      token:
+    roleArn:
+    loginUrl: "https://signin.aliyun.com/federation"
+    destination: "https://console.aliyun.com"
+  aws:
+    credential:
+      secretId:
+      secretKey:
+      token:
+    roleArn:
+    loginUrl: "https://signin.aws.amazon.com/federation"
+    destination: 
+
+grpc:
+  token: 

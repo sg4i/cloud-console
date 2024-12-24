@@ -43,8 +43,6 @@ func run() func(cmd *cobra.Command, args []string) {
 
 		// 如果命令行参数为空，尝试从配置文件读取
 		if secretId == "" || secretKey == "" {
-
-
 			// 从配置文件获取凭证信息
 			if credential := provider.GetCredential(); credential != nil {
 				if secretId == "" {
@@ -66,7 +64,6 @@ func run() func(cmd *cobra.Command, args []string) {
 		if destination == "" {
 			destination = provider.GetDestination()
 		}
-		
 
 		// 创建 Console 实例
 		opts := &console.Options{
