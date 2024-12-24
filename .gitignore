@@ -19,7 +19,6 @@ go.work
 
 # 编译输出目录
 /bin/
-/pkg/
 
 # IDE 和编辑器文件
 .idea/
