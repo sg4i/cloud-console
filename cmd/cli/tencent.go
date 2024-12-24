@@ -65,6 +65,12 @@ func run() func(cmd *cobra.Command, args []string) {
 			destination = provider.GetDestination()
 		}
 
+		// 校验必要参数
+		if secretId == "" || secretKey == "" {
+			fmt.Println("错误: Secret ID 和 Secret Key 不能为空")
+			os.Exit(1)
+		}
+
 		// 创建 Console 实例
 		opts := &console.Options{
 			Mode:     "cli",

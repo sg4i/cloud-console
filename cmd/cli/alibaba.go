@@ -70,6 +70,12 @@ func runAlibaba() func(cmd *cobra.Command, args []string) {
 			loginUrl = provider.GetLoginUrl()
 		}
 
+		// 校验必要参数
+		if accessKeyId == "" || accessKeySecret == "" {
+			fmt.Println("错误: Access Key ID 和 Access Key Secret 不能为空")
+			os.Exit(1)
+		}
+
 		// 创建 Console 实例
 		opts := &console.Options{
 			Mode:     "cli",

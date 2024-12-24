@@ -70,6 +70,12 @@ func runAWS() func(cmd *cobra.Command, args []string) {
 			loginUrl = provider.GetLoginUrl()
 		}
 
+		// 校验必要参数
+		if accessKeyId == "" || secretAccessKey == "" {
+			fmt.Println("错误: Access Key ID 和 Secret Access Key 不能为空")
+			os.Exit(1)
+		}
+
 		// 创建 Console 实例
 		opts := &console.Options{
 			Mode:     "cli",
