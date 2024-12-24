@@ -16,5 +16,21 @@ func init() {
 		TimestampFormat: "2006-01-02 15:04:05",
 		ForceColors:     true,
 	})
-	Log.SetLevel(logrus.InfoLevel)
+	Log.SetLevel(logrus.DebugLevel)
+}
+
+// Info logs a message at level Info
+func Info(msg string, fields ...interface{}) {
+	Log.WithFields(makeFields(fields...)).Info(msg)
+}
+
+// makeFields converts a slice of interfaces to logrus.Fields
+func makeFields(fields ...interface{}) logrus.Fields {
+	f := make(logrus.Fields)
+	for i := 0; i < len(fields); i += 2 {
+		if i+1 < len(fields) {
+			f[fields[i].(string)] = fields[i+1]
+		}
+	}
+	return f
 }
