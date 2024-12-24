@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"strings"
 	"sync"
 	"time"
@@ -12,12 +13,19 @@ var (
 	once sync.Once
 )
 
+// TODO: 支持指定配置文件路径, fmt 改用 logger
 func LoadConfig() {
 	// sync.Once 来确保 LoadConfig 函数中的初始化代码只会执行一次
 	once.Do(func() {
 		viper.SetConfigName("config")
 		viper.SetConfigType("yml")
 		viper.AddConfigPath(".")
+
+		if err := viper.ReadInConfig(); err != nil {
+			fmt.Println("Error reading config file:", err)
+		} else {
+			fmt.Println("Config file read successfully")
+		}
 
 		viper.AutomaticEnv()
 		// 使用 viper.SetEnvKeyReplacer 来设置环境变量名称的转换规则。
