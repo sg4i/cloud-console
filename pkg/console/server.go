@@ -1,6 +1,8 @@
 package console
 
 import (
+	"context"
+
 	pb "github.com/sg4i/cloud-console/proto"
 
 	"net"
@@ -17,6 +19,50 @@ type server struct {
 
 func NewServer() *server {
 	return &server{}
+}
+
+func (s *server) GenerateRoleLoginURL(ctx context.Context, req *pb.GenerateRoleLoginURLRequest) (*pb.GenerateRoleLoginURLResponse, error) {
+	// 创建 Console 实例
+	console, err := New(&Options{
+		Mode:     "grpc",
+		Provider: Provider(req.Provider),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// 处理可选字段
+	var token, roleArn, destination, loginUrl string
+	if req.Token != nil {
+		token = *req.Token
+	}
+	if req.RoleArn != nil {
+		roleArn = *req.RoleArn
+	}
+	if req.Desiontion != nil {
+		destination = *req.Desiontion
+	}
+	if req.LoginUrl != nil {
+		loginUrl = *req.LoginUrl
+	}
+
+	// 将请求参数转换为 LoginOptions
+	loginOpts := NewLoginOptions(
+		req.SecretId,
+		req.SecretKey,
+		token,
+		roleArn,
+		destination,
+		loginUrl,
+	)
+
+	// 调用 GetLoginURL 获取登录 URL
+	url, err := console.GetLoginURL(loginOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.GenerateRoleLoginURLResponse{Url: url}, nil
 }
 
 func StartRPCServer(grpcAddress string, httpAddress string, authToken string) error {
