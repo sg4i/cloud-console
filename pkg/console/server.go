@@ -1,4 +1,4 @@
-package server
+package console
 
 import (
 	pb "github.com/sg4i/cloud-console/proto"
@@ -7,6 +7,7 @@ import (
 
 	"github.com/sg4i/cloud-console/internal/logger"
 
+	grpc_server "github.com/sg4i/cloud-console/internal/server"
 	"google.golang.org/grpc"
 )
 
@@ -25,7 +26,7 @@ func StartRPCServer(grpcAddress string, httpAddress string, authToken string) er
 		return err
 	}
 	s := grpc.NewServer(
-		grpc.UnaryInterceptor(authInterceptor(authToken)),
+		grpc.UnaryInterceptor(grpc_server.AuthInterceptor(authToken)),
 	)
 	pb.RegisterConsoleServiceServer(s, NewServer())
 
@@ -39,7 +40,7 @@ func StartRPCServer(grpcAddress string, httpAddress string, authToken string) er
 
 	// 如果httpAddress不为空,则启动HTTP网关
 	if httpAddress != "" {
-		return runHTTPServer(grpcAddress, httpAddress, authToken)
+		return grpc_server.RunHTTPServer(grpcAddress, httpAddress, authToken)
 	}
 
 	// 如httpAddress为空,则阻塞主线程,保持gRPC服务器运行

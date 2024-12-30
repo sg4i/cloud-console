@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func runHTTPServer(grpcAddress string, httpAddress string, token string) error {
+func RunHTTPServer(grpcAddress string, httpAddress string, token string) error {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
