@@ -3,11 +3,14 @@ package cli
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
+	"github.com/sg4i/cloud-console/cmd/common"
 	"github.com/sg4i/cloud-console/config"
 	"github.com/sg4i/cloud-console/pkg/console"
 	"github.com/spf13/cobra"
 )
+
 
 func NewAWSCmd() *cobra.Command {
 	cmd := &cobra.Command{
@@ -16,32 +19,37 @@ func NewAWSCmd() *cobra.Command {
 		Run:   runAWS(),
 	}
 
-	AddStringFlag(cmd, "access-key-id", "i", "", "AWS Access Key ID", false)
-	AddStringFlag(cmd, "secret-access-key", "k", "", "AWS Secret Access Key", false)
-	AddStringFlag(cmd, "token", "t", "", "AWS Session Token", false)
-	AddStringFlag(cmd, "role-arn", "r", "", "AWS角色 ARN", false)
-	AddStringFlag(cmd, "login-url", "l", "https://signin.aws.amazon.com/federation", "AWS联合身份验证登录URL", false)
-	AddStringFlag(cmd, "destination", "d", "https://console.aws.amazon.com", "登录成功后跳转的 URL", false)
-	AddBoolFlag(cmd, "auto-login", "a", true, "自动打开 URL", false)
+	// 设置默认配置文件路径
+	defaultConfig := filepath.Join(".", "config.yml")
+
+	common.AddStringFlag(cmd, "config", "c", defaultConfig, "配置文件路径", false)
+	common.AddStringFlag(cmd, "access-key-id", "i", "", "AWS Access Key ID", false)
+	common.AddStringFlag(cmd, "secret-access-key", "k", "", "AWS Secret Access Key", false)
+	common.AddStringFlag(cmd, "token", "t", "", "AWS Session Token", false)
+	common.AddStringFlag(cmd, "role-arn", "r", "", "AWS角色 ARN", false)
+	common.AddStringFlag(cmd, "login-url", "l", "https://signin.aws.amazon.com/federation", "AWS联合身份验证登录URL", false)
+	common.AddStringFlag(cmd, "destination", "d", "https://console.aws.amazon.com", "登录成功后跳转的 URL", false)
+	common.AddBoolFlag(cmd, "auto-login", "a", true, "自动打开 URL", false)
 
 	// 关闭参数自动排序
 	cmd.Flags().SortFlags = false
+
 
 	return cmd
 }
 
 func runAWS() func(cmd *cobra.Command, args []string) {
 	return func(cmd *cobra.Command, args []string) {
-		// 获取命令行参数
-		cfg := config.New()
-		provider := cfg.GetProvider().GetAws()
-
+		configFile, _ := cmd.Flags().GetString("config")
 		accessKeyId, _ := cmd.Flags().GetString("access-key-id")
 		secretAccessKey, _ := cmd.Flags().GetString("secret-access-key")
 		token, _ := cmd.Flags().GetString("token")
 		roleArn, _ := cmd.Flags().GetString("role-arn")
 		loginUrl, _ := cmd.Flags().GetString("login-url")
 		destination, _ := cmd.Flags().GetString("destination")
+
+		cfg := config.New(configFile)
+		provider := cfg.GetProvider().GetTencent()
 
 		// 如果命令行参数为空，尝试从配置文件读取
 		if accessKeyId == "" || secretAccessKey == "" {

@@ -34,11 +34,12 @@ func InitCommands() {
 	// 这里会导入并初始化所有子命令
 	initCliCommands(cliGroup)
 
+	initServerCommands(rpcGroup)
 }
 
 func Execute() {
-	InitCommands()                            // 在执行之前调用初始化函数
-	if err := RootCmd.Execute(); err != nil { // 修复这里的语法错误
+	InitCommands()
+	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}

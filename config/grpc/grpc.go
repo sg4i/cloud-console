@@ -9,8 +9,6 @@ type GRPCConfig struct {
 }
 
 func New() *GRPCConfig {
-	utils.LoadConfig()
-
 	return &GRPCConfig{
 		Token: utils.GetString("rpc.token"),
 	}

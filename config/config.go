@@ -12,10 +12,10 @@ type Config struct {
 	RPC      *grpc.GRPCConfig
 }
 
-// New 创建新的配置实例
-func New() *Config {
+// New 创建新的配置实例，configFile 为配置文件的完整路径（包含文件名）
+func New(configFile string) *Config {
 	// 加载配置文件
-	utils.LoadConfig()
+	utils.LoadConfig(configFile)
 
 	return &Config{
 		Provider: provider.New(),
