@@ -4,18 +4,18 @@ import (
 	"github.com/sg4i/cloud-console/internal/utils"
 )
 
-type RPCConfig struct {
+type GRPCConfig struct {
 	Token string
 }
 
-func New() *RPCConfig {
+func New() *GRPCConfig {
 	utils.LoadConfig()
 
-	return &RPCConfig{
+	return &GRPCConfig{
 		Token: utils.GetString("rpc.token"),
 	}
 }
 
-func (c *RPCConfig) GetToken() string {
+func (c *GRPCConfig) GetToken() string {
 	return c.Token
 }

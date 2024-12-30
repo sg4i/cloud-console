@@ -9,7 +9,7 @@ import (
 // Config 总配置结构体
 type Config struct {
 	Provider *provider.ProviderConfig
-	RPC      *grpc.RPCConfig
+	RPC      *grpc.GRPCConfig
 }
 
 // New 创建新的配置实例
@@ -29,6 +29,6 @@ func (c *Config) GetProvider() *provider.ProviderConfig {
 }
 
 // GetRPC 获取RPC配置
-func (c *Config) GetRPC() *grpc.RPCConfig {
+func (c *Config) GetRPC() *grpc.GRPCConfig {
 	return c.RPC
 }
