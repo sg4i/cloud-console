@@ -1,12 +1,13 @@
 package cli
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/sg4i/cloud-console/cmd/common"
 	"github.com/sg4i/cloud-console/config"
+	"github.com/sg4i/cloud-console/internal/logger"
+	"github.com/sg4i/cloud-console/internal/utils"
 	"github.com/sg4i/cloud-console/pkg/console"
 	"github.com/spf13/cobra"
 )
@@ -44,6 +45,7 @@ func runTencent() func(cmd *cobra.Command, args []string) {
 		token, _ := cmd.Flags().GetString("token")
 		roleArn, _ := cmd.Flags().GetString("role-arn")
 		destination, _ := cmd.Flags().GetString("destination")
+		autoLogin, _ := cmd.Flags().GetBool("auto-login")
 
 		cfg := config.New(configFile)
 		provider := cfg.GetProvider().GetTencent()
@@ -74,7 +76,7 @@ func runTencent() func(cmd *cobra.Command, args []string) {
 
 		// 校验必要参数
 		if secretId == "" || secretKey == "" {
-			fmt.Println("错误: Secret ID 和 Secret Key 不能为空")
+			logger.Log.Error("Secret ID 和 Secret Key 不能为空")
 			os.Exit(1)
 		}
 
@@ -86,7 +88,7 @@ func runTencent() func(cmd *cobra.Command, args []string) {
 
 		c, err := console.New(opts)
 		if err != nil {
-			fmt.Printf("创建 Console 实例失败: %v\n", err)
+			logger.Log.WithError(err).Error("创建 Console 实例失败")
 			os.Exit(1)
 		}
 
@@ -96,11 +98,17 @@ func runTencent() func(cmd *cobra.Command, args []string) {
 		// 获取登录 URL
 		url, err := c.GetLoginURL(loginOpts)
 		if err != nil {
-			fmt.Printf("获取登录 URL 失败: %v\n", err)
+			logger.Log.WithError(err).Error("获取登录 URL 失败")
 			os.Exit(1)
 		}
 
-		// 输出登录 URL
-		fmt.Println(url)
+		if autoLogin {
+			err = utils.OpenURL(url)
+			if err != nil {
+				logger.Log.WithError(err).Error("自动打开 URL 失败")
+			}
+		} else {
+			logger.Log.Info(url)
+		}
 	}
 }
