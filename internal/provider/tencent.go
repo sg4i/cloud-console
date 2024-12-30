@@ -57,7 +57,7 @@ func TencentAssumeRole(secretId, secretKey, roleArn string) (*Credential, error)
 	}
 
 	// 返回临时凭证
-	logger.Log.Infof("调用AssumeRole成功获取角色 %s 临时凭证", opts.RoleArn)
+	logger.Log.Infof("调用AssumeRole成功获取角色%s的临时凭证", opts.RoleArn)
 	logger.Log.WithFields(logrus.Fields{
 		"TmpSecretId": *response.Response.Credentials.TmpSecretId,
 		"Token":       *response.Response.Credentials.Token,
