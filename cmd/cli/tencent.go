@@ -102,13 +102,12 @@ func runTencent() func(cmd *cobra.Command, args []string) {
 			os.Exit(1)
 		}
 
+		logger.Log.Info(url)
 		if autoLogin {
 			err = utils.OpenURL(url)
 			if err != nil {
 				logger.Log.WithError(err).Error("自动打开 URL 失败")
 			}
-		} else {
-			logger.Log.Info(url)
 		}
 	}
 }
