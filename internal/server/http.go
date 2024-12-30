@@ -43,10 +43,14 @@ func RunHTTPServer(grpcAddress string, httpAddress string, token string) error {
 			w.Write([]byte("OK"))
 			return
 		}
-		if !isValidHTTPToken(r, token) {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-			return
+
+		if token != "" {
+			if !isValidHTTPToken(r, token) {
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
 		}
+
 		mux.ServeHTTP(w, r)
 	})
 

@@ -71,9 +71,15 @@ func StartRPCServer(grpcAddress string, httpAddress string, authToken string) er
 	if err != nil {
 		return err
 	}
-	s := grpc.NewServer(
-		grpc.UnaryInterceptor(grpc_server.AuthInterceptor(authToken)),
-	)
+	var s *grpc.Server
+	if authToken == "" {
+		s = grpc.NewServer()
+	} else {
+		s = grpc.NewServer(
+			grpc.UnaryInterceptor(grpc_server.AuthInterceptor(authToken)),
+		)
+	}
+
 	pb.RegisterConsoleServiceServer(s, NewServer())
 
 	// 启动gRPC服务器
