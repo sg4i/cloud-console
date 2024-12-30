@@ -13,7 +13,6 @@ type AlibabaConfig struct {
 }
 
 func NewAlibaba() *AlibabaConfig {
-	utils.LoadConfig()
 
 	config := &AlibabaConfig{
 		Credential: &internalProvider.Credential{},

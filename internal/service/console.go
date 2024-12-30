@@ -13,7 +13,6 @@ type ConsoleLoginOptions interface {
 	GetLoginURL() string
 	GetDestination() string
 	GetRoleArn() string
-	GetAssumeRoleOptions() *provider.AssumeRoleOptions
 }
 
 // BaseLoginOptions 提供基础的登录选项实现
@@ -22,16 +21,12 @@ type BaseLoginOptions struct {
 	LoginURL          string
 	Destination       string
 	RoleArn           string
-	AssumeRoleOptions *provider.AssumeRoleOptions
 }
 
 func (b *BaseLoginOptions) GetCredential() *provider.Credential { return b.Credential }
 func (b *BaseLoginOptions) GetLoginURL() string                 { return b.LoginURL }
 func (b *BaseLoginOptions) GetDestination() string              { return b.Destination }
 func (b *BaseLoginOptions) GetRoleArn() string                  { return b.RoleArn }
-func (b *BaseLoginOptions) GetAssumeRoleOptions() *provider.AssumeRoleOptions {
-	return b.AssumeRoleOptions
-}
 
 // Provider 定义云服务提供商类型
 type Provider string
@@ -50,7 +45,6 @@ func GenerateConsoleLoginURL(provider Provider, opts ConsoleLoginOptions) (strin
 			Credential:        opts.GetCredential(),
 			SUrl:              opts.GetDestination(),
 			RoleArn:           opts.GetRoleArn(),
-			AssumeRoleOptions: opts.GetAssumeRoleOptions(),
 		}
 		return logic.GenerateTencentRoleLoginURL(tencentOpts)
 
@@ -60,7 +54,6 @@ func GenerateConsoleLoginURL(provider Provider, opts ConsoleLoginOptions) (strin
 			LoginURL:          opts.GetLoginURL(),
 			Destination:       opts.GetDestination(),
 			RoleArn:           opts.GetRoleArn(),
-			AssumeRoleOptions: opts.GetAssumeRoleOptions(),
 		}
 		return logic.GenerateAlibabaRoleLoginURL(alibabaOpts)
 
@@ -70,7 +63,6 @@ func GenerateConsoleLoginURL(provider Provider, opts ConsoleLoginOptions) (strin
 			LoginURL:          opts.GetLoginURL(),
 			Destination:       opts.GetDestination(),
 			RoleArn:           opts.GetRoleArn(),
-			AssumeRoleOptions: opts.GetAssumeRoleOptions(),
 		}
 		return logic.GenerateAwsRoleLoginURL(awsOpts)
 

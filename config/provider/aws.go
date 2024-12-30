@@ -13,7 +13,6 @@ type AwsConfig struct {
 }
 
 func NewAws() *AwsConfig {
-	utils.LoadConfig()
 
 	config := &AwsConfig{
 		Credential: &internalProvider.Credential{},

@@ -28,23 +28,11 @@ func NewAlibabaStsClient(accessKeyId, accessKeySecret string) (*sts20150401.Clie
 	return client, nil
 }
 
-func AlibabaAssumeRole(accessKeyId, accessKeySecret string, opts *AssumeRoleOptions) (*Credential, error) {
-	if opts == nil {
-		opts = &AssumeRoleOptions{
-			RoleSessionName: DefaultRoleSessionName,
-			DurationSeconds: DefaultDurationSeconds,
-		}
-	}
-	if opts.RoleArn == "" {
-		return nil, fmt.Errorf("RoleArn 不能为空")
-	}
-
-	// 使用默认值填充未指定的选项
-	if opts.RoleSessionName == "" {
-		opts.RoleSessionName = DefaultRoleSessionName
-	}
-	if opts.DurationSeconds == 0 {
-		opts.DurationSeconds = DefaultDurationSeconds
+func AlibabaAssumeRole(accessKeyId, accessKeySecret, roleArn string) (*Credential, error) {
+	opts := &AssumeRoleOptions{
+		RoleSessionName: DefaultRoleSessionName,
+		DurationSeconds: DefaultDurationSeconds,
+		RoleArn: roleArn,
 	}
 
 	// 创建 STS 客户端

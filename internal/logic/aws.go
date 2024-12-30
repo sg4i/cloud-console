@@ -85,7 +85,7 @@ func getAwsSigninToken(credential *provider.Credential) (string, error) {
 func GenerateAwsRoleLoginURL(opts *AwsLoginOptions) (string, error) {
 	// 如果没有有效的 token，则使用 AssumeRole 获取临时密钥
 	if opts.Credential.Token == "" {
-		tempCred, err := provider.AwsAssumeRole(opts.Credential.SecretId, opts.Credential.SecretKey, "", opts.AssumeRoleOptions)
+		tempCred, err := provider.AwsAssumeRole(opts.Credential.SecretId, opts.Credential.SecretKey, "", opts.RoleArn)
 		if err != nil {
 			return "", fmt.Errorf("获取临时密钥失败: %w", err)
 		}

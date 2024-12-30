@@ -13,7 +13,6 @@ type TencentConfig struct {
 }
 
 func NewTencent() *TencentConfig {
-	utils.LoadConfig()
 
 	config := &TencentConfig{
 		Credential: &internalProvider.Credential{},

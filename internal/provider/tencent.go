@@ -15,37 +15,23 @@ import (
 func NewCommonClient(secretId, secretKey, endpoint, region string) *common.Client {
 	// 创建凭证
 	credential := common.NewCredential(secretId, secretKey)
-	logger.Log.Debug("已创建腾讯云凭证")
 
 	// 创建客户端配置
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.Endpoint = endpoint
-	logger.Log.WithField("endpoint", endpoint).Debug("已设置客户端配置")
 
 	// 创建并返回 CommonClient
 	client := common.NewCommonClient(credential, region, cpf)
-	logger.Log.WithField("region", region).Debug("已创建腾讯云通用客户端")
 
 	return client
 }
 
-func TencentAssumeRole(secretId, secretKey string, opts *AssumeRoleOptions) (*Credential, error) {
-	if opts == nil {
-		opts = &AssumeRoleOptions{
-			RoleSessionName: DefaultRoleSessionName,
-			DurationSeconds: DefaultDurationSeconds,
-		}
-	}
-	if opts.RoleArn == "" {
-		return nil, fmt.Errorf("RoleArn 不能为空")
-	}
+func TencentAssumeRole(secretId, secretKey, roleArn string) (*Credential, error) {
 
-	// 使用默认值填充未指定的选项
-	if opts.RoleSessionName == "" {
-		opts.RoleSessionName = DefaultRoleSessionName
-	}
-	if opts.DurationSeconds == 0 {
-		opts.DurationSeconds = DefaultDurationSeconds
+	opts := &AssumeRoleOptions{
+		RoleSessionName: DefaultRoleSessionName,
+		DurationSeconds: DefaultDurationSeconds,
+		RoleArn:         roleArn,
 	}
 
 	// 创建 CommonClient
@@ -71,7 +57,7 @@ func TencentAssumeRole(secretId, secretKey string, opts *AssumeRoleOptions) (*Cr
 	}
 
 	// 返回临时凭证
-	logger.Log.Info("成功获取临时凭证")
+	logger.Log.Infof("调用AssumeRole成功获取角色 %s 临时凭证", opts.RoleArn)
 	logger.Log.WithFields(logrus.Fields{
 		"TmpSecretId": *response.Response.Credentials.TmpSecretId,
 		"Token":       *response.Response.Credentials.Token,

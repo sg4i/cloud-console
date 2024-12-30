@@ -73,7 +73,7 @@ func getSigninToken(credential *provider.Credential) (string, error) {
 func GenerateAlibabaRoleLoginURL(opts *AlibabaLoginOptions) (string, error) {
 	// 如果没有有效的 token，则使用 AssumeRole 获取临时密钥
 	if opts.Credential.Token == "" {
-		tempCred, err := provider.AlibabaAssumeRole(opts.Credential.SecretId, opts.Credential.SecretKey, opts.AssumeRoleOptions)
+		tempCred, err := provider.AlibabaAssumeRole(opts.Credential.SecretId, opts.Credential.SecretKey, opts.RoleArn)
 		if err != nil {
 			return "", fmt.Errorf("获取临时密钥失败: %w", err)
 		}
