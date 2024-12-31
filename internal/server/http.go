@@ -28,16 +28,23 @@ func RunHTTPServer(grpcAddress string, httpAddress string, token string) error {
 			return metadata.New(md)
 		}),
 	)
+
 	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithUnaryInterceptor(clientAuthInterceptor(token)),
 	}
+	if token != "" {
+		opts = append(opts, grpc.WithUnaryInterceptor(clientAuthInterceptor(token)))
+	}
+
 	err := pb.RegisterConsoleServiceHandlerFromEndpoint(ctx, mux, grpcAddress, opts)
 	if err != nil {
+		logger.Log.Errorf("注册 gRPC 服务处理程序失败: %v", err)
 		return err
 	}
 
 	httpHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		logger.Log.Infof("处理请求: %s %s", r.Method, r.URL.Path)
+
 		if r.URL.Path == "/healthz" {
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte("OK"))
@@ -54,9 +61,10 @@ func RunHTTPServer(grpcAddress string, httpAddress string, token string) error {
 		mux.ServeHTTP(w, r)
 	})
 
+	corsHandler := CORSHandler(httpHandler)
 	server := &http.Server{
 		Addr:    httpAddress,
-		Handler: httpHandler,
+		Handler: corsHandler,
 	}
 
 	logger.Log.Infof("Starting HTTP server on %s", httpAddress)
