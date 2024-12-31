@@ -42,7 +42,7 @@ tmp/
 temp/
 
 # 个人配置文件（可能包含敏感信息）
-config.yaml
+config.yml
 credentials.json
 
 # 腾讯云相关的临时文件或凭证（如果有）
