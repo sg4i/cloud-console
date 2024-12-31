@@ -24,7 +24,6 @@ func NewAlibabaStsClient(accessKeyId, accessKeySecret string) (*sts20150401.Clie
 		return nil, fmt.Errorf("创建阿里云 STS 客户端失败: %w", err)
 	}
 
-	logger.Log.Debug("已创建阿里云 STS 客户端")
 	return client, nil
 }
 
@@ -56,7 +55,7 @@ func AlibabaAssumeRole(accessKeyId, accessKeySecret, roleArn string) (*Credentia
 	}
 
 	// 返回临时凭证
-	logger.Log.Info("成功获取临时凭证")
+	logger.Log.Infof("调用AssumeRole成功获取角色%s的临时凭证", opts.RoleArn)
 	logger.Log.WithFields(logrus.Fields{
 		"AccessKeyId":     tea.StringValue(response.Body.Credentials.AccessKeyId),
 		"AccessKeySecret": tea.StringValue(response.Body.Credentials.AccessKeySecret),

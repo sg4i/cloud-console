@@ -22,7 +22,6 @@ func NewAwsStsClient(accessKeyId, secretAccessKey, sessionToken string) (*sts.ST
 		return nil, fmt.Errorf("创建 AWS STS 客户端失败: %w", err)
 	}
 
-	logger.Log.Debug("已创建 AWS STS 客户端")
 	return sts.New(sess), nil
 }
 
@@ -30,7 +29,7 @@ func AwsAssumeRole(accessKeyId, secretAccessKey, sessionToken, roleArn string) (
 	opts := &AssumeRoleOptions{
 		RoleSessionName: DefaultRoleSessionName,
 		DurationSeconds: DefaultDurationSeconds,
-		RoleArn: roleArn,
+		RoleArn:         roleArn,
 	}
 
 	// 创建 STS 客户端
@@ -54,7 +53,7 @@ func AwsAssumeRole(accessKeyId, secretAccessKey, sessionToken, roleArn string) (
 	}
 
 	// 返回临时凭证
-	logger.Log.Info("成功获取临时凭证")
+	logger.Log.Infof("调用AssumeRole成功获取角色%s的临时凭证", opts.RoleArn)
 	logger.Log.WithFields(logrus.Fields{
 		"AccessKeyId":  *result.Credentials.AccessKeyId,
 		"SessionToken": *result.Credentials.SessionToken,

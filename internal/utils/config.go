@@ -1,11 +1,11 @@
 package utils
 
 import (
-	"fmt"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/sg4i/cloud-console/internal/logger"
 	"github.com/spf13/viper"
 )
 
@@ -26,9 +26,7 @@ func LoadConfig(configFile string) {
 		}
 
 		if err := viper.ReadInConfig(); err != nil {
-			fmt.Println("Error reading config file:", err)
-		} else {
-			fmt.Println("Config file read successfully")
+			logger.Log.WithError(err).Error("读取配置文件失败")
 		}
 
 		viper.AutomaticEnv()

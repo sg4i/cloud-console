@@ -49,7 +49,7 @@ func runAWS() func(cmd *cobra.Command, args []string) {
 		autoLogin, _ := cmd.Flags().GetBool("auto-login")
 
 		cfg := config.New(configFile)
-		provider := cfg.GetProvider().GetTencent()
+		provider := cfg.GetProvider().GetAws()
 
 		// 如果命令行参数为空，尝试从配置文件读取
 		if accessKeyId == "" || secretAccessKey == "" {
@@ -106,7 +106,7 @@ func runAWS() func(cmd *cobra.Command, args []string) {
 			os.Exit(1)
 		}
 
-		logger.Log.Info(url)
+		logger.Log.Info("AWS 控制台登录链接: " + url)
 		if autoLogin {
 			err = utils.OpenURL(url)
 			if err != nil {

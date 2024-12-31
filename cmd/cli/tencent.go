@@ -102,7 +102,7 @@ func runTencent() func(cmd *cobra.Command, args []string) {
 			os.Exit(1)
 		}
 
-		logger.Log.Info(url)
+		logger.Log.Info("腾讯云控制台登录链接: " + url)
 		if autoLogin {
 			err = utils.OpenURL(url)
 			if err != nil {

@@ -5,7 +5,6 @@ import (
 
 	"github.com/sg4i/cloud-console/internal/provider"
 	"github.com/sg4i/cloud-console/internal/service"
-	
 )
 
 // Provider 定义云服务提供商类型
@@ -13,7 +12,7 @@ type Provider string
 
 const (
 	ProviderTencent Provider = "tencent"
-	ProviderAlibaba Provider = "ali"
+	ProviderAlibaba Provider = "alibaba"
 	ProviderAws     Provider = "aws"
 )
 
