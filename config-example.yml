@@ -2,10 +2,10 @@
 provider:
   tencent:
     credential:
-      secretId:
-      secretKey:
+      secretId: 
+      secretKey: 
       token:
-    roleArn:
+    roleArn: 
     destination: "https://console.cloud.tencent.com"
   alibaba:
     credential:
@@ -25,4 +25,6 @@ provider:
     destination: 
 
 grpc:
-  token: 
+  token:
+  rpcAddress: ":50050"
+  httpAddress: ":50080"
