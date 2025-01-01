@@ -27,6 +27,7 @@ func LoadConfig(configFile string) {
 
 		if err := viper.ReadInConfig(); err != nil {
 			logger.Log.WithError(err).Error("读取配置文件失败")
+			logger.Log.Info("将使用环境变量作为配置源")
 		}
 
 		viper.AutomaticEnv()
