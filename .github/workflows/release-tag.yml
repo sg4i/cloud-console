@@ -24,8 +24,8 @@ jobs:
         run: |
           # 创建一个临时目录
           mkdir -p /tmp/release
-          # 复制所有文件到临时目录（排除.git）
-          rsync -av --exclude='.git' . /tmp/release/
+          # 复制所有文件到临时目录（排除.git和.github）
+          rsync -av --exclude='.git' --exclude='.github' . /tmp/release/
           # 从临时目录创建压缩包
           cd /tmp/release && tar -czf $GITHUB_WORKSPACE/cloudconsole-source.tar.gz .
 
