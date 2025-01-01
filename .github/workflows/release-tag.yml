@@ -22,7 +22,7 @@ jobs:
 
       - name: Create source code archive
         run: |
-          tar -czf cloudconsole-source.tar.gz --exclude='.git' .
+          tar --warning=no-file-changed -czf cloudconsole-source.tar.gz --exclude='.git' .
 
       - name: Build binaries
         run: |
