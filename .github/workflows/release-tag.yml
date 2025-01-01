@@ -1,0 +1,61 @@
+name: CI Create Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
+
+      - name: Create source code archive
+        run: |
+          tar -czf cloudconsole-source.tar.gz --exclude='.git' .
+
+      - name: Build binaries
+        run: |
+          # Linux
+          GOOS=linux GOARCH=amd64 go build -o cloudconsole-linux-amd64 ./cmd
+          GOOS=linux GOARCH=arm64 go build -o cloudconsole-linux-arm64 ./cmd
+          
+          # macOS
+          GOOS=darwin GOARCH=amd64 go build -o cloudconsole-darwin-amd64 ./cmd
+          GOOS=darwin GOARCH=arm64 go build -o cloudconsole-darwin-arm64 ./cmd
+          
+          # Windows
+          GOOS=windows GOARCH=amd64 go build -o cloudconsole-windows-amd64.exe ./cmd
+          GOOS=windows GOARCH=arm64 go build -o cloudconsole-windows-arm64.exe ./cmd
+          
+          # Create checksums
+          sha256sum cloudconsole-* > checksums.txt
+
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release create "$tag" \
+            cloudconsole-source.tar.gz \
+            cloudconsole-linux-amd64 \
+            cloudconsole-linux-arm64 \
+            cloudconsole-darwin-amd64 \
+            cloudconsole-darwin-arm64 \
+            cloudconsole-windows-amd64.exe \
+            cloudconsole-windows-arm64.exe \
+            checksums.txt \
+            --target="master" \
+            --repo="$GITHUB_REPOSITORY" \
+            --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
+            --generate-notes
