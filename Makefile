@@ -8,6 +8,8 @@ BINARY_NAME=cloudconsole
 BINARY_UNIX=$(BINARY_NAME)_unix
 MAIN_PATH=./cmd
 PROTO_PATH=./proto
+DOCKERFILE_PATH=deployment/Dockerfile
+
 
 all: tidy test build
 
@@ -42,7 +44,7 @@ build-linux:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(BINARY_UNIX) -v $(MAIN_PATH)
 
 docker-build:
-	docker build -t $(BINARY_NAME):latest .
+	docker build -t $(BINARY_NAME):latest -f $(DOCKERFILE_PATH) .
 
 tidy:
 	$(GOCMD) mod tidy
