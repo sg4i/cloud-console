@@ -9,7 +9,7 @@ import "google/api/annotations.proto";
 service ConsoleService {
   rpc GenerateRoleLoginURL (GenerateRoleLoginURLRequest) returns (GenerateRoleLoginURLResponse) {
     option (google.api.http) = {
-      post: "/v1/role_login"
+      post: "/api/v1/role_login"
       body: "*"
     };
   }

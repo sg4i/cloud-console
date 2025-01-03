@@ -71,7 +71,7 @@ func RegisterConsoleServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/cloudconsole.ConsoleService/GenerateRoleLoginURL", runtime.WithHTTPPathPattern("/v1/role_login"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/cloudconsole.ConsoleService/GenerateRoleLoginURL", runtime.WithHTTPPathPattern("/api/v1/role_login"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -129,7 +129,7 @@ func RegisterConsoleServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/cloudconsole.ConsoleService/GenerateRoleLoginURL", runtime.WithHTTPPathPattern("/v1/role_login"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/cloudconsole.ConsoleService/GenerateRoleLoginURL", runtime.WithHTTPPathPattern("/api/v1/role_login"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -146,7 +146,7 @@ func RegisterConsoleServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_ConsoleService_GenerateRoleLoginURL_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "role_login"}, ""))
+	pattern_ConsoleService_GenerateRoleLoginURL_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "role_login"}, ""))
 )
 
 var (
