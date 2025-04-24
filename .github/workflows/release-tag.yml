@@ -12,58 +12,25 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: '1.22'
 
-      - name: Create source code archive
-        run: |
-          # 创建一个临时目录
-          mkdir -p /tmp/release
-          # 复制所有文件到临时目录（排除.git和.github）
-          rsync -av --exclude='.git' --exclude='.github' . /tmp/release/
-          # 从临时目录创建压缩包
-          cd /tmp/release && tar -czf $GITHUB_WORKSPACE/cloudconsole-source.tar.gz .
+      - name: Make
+        run: make build-release
+      
+      - name: release Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudconsole
+          path: ./cloudconsole_*
 
-      - name: Build binaries
-        run: |
-          VERSION=${{ github.ref_name }}
-          LDFLAGS="-X main.Version=${VERSION} -s -w"
-          
-          # Linux
-          GOOS=linux GOARCH=amd64 go build -ldflags="${LDFLAGS}" -o cloudconsole-linux-amd64 ./cmd
-          GOOS=linux GOARCH=arm64 go build -ldflags="${LDFLAGS}" -o cloudconsole-linux-arm64 ./cmd
-          
-          # macOS
-          GOOS=darwin GOARCH=amd64 go build -ldflags="${LDFLAGS}" -o cloudconsole-darwin-amd64 ./cmd
-          GOOS=darwin GOARCH=arm64 go build -ldflags="${LDFLAGS}" -o cloudconsole-darwin-arm64 ./cmd
-          
-          # Windows
-          GOOS=windows GOARCH=amd64 go build -ldflags="${LDFLAGS}" -o cloudconsole-windows-amd64.exe ./cmd
-          GOOS=windows GOARCH=arm64 go build -ldflags="${LDFLAGS}" -o cloudconsole-windows-arm64.exe ./cmd
-          
-          # Create checksums
-          sha256sum cloudconsole-* > checksums.txt
-
-      - name: Create Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
-        run: |
-          gh release create "$tag" \
-            cloudconsole-source.tar.gz \
-            cloudconsole-linux-amd64 \
-            cloudconsole-linux-arm64 \
-            cloudconsole-darwin-amd64 \
-            cloudconsole-darwin-arm64 \
-            cloudconsole-windows-amd64.exe \
-            cloudconsole-windows-arm64.exe \
-            checksums.txt \
-            --target="master" \
-            --repo="$GITHUB_REPOSITORY" \
-            --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
-            --generate-notes
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./cloudconsole_*
+          draft: true
+          fail_on_unmatched_files: true

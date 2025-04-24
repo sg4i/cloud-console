@@ -1,3 +1,4 @@
+ARTIFACT_SUFFIX ?=
  # Go parameters
 GOCMD=go
 GOBUILD=$(GOCMD) build
@@ -5,7 +6,7 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 BINARY_NAME=cloudconsole
-BINARY_UNIX=$(BINARY_NAME)_unix
+
 MAIN_PATH=./cmd
 PROTO_PATH=./proto
 DOCKERFILE_PATH=deployment/Dockerfile
@@ -40,8 +41,12 @@ proto:
 		$(PROTO_PATH)/*.proto
 
 # Cross compilation
-build-linux:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(BINARY_UNIX) -v $(MAIN_PATH)
+build-release:
+	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 $(GOBUILD) -o $(BINARY_NAME)_windows-amd64$(ARTIFACT_SUFFIX).exe -v $(MAIN_PATH)
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 $(GOBUILD) -o $(BINARY_NAME)_linux-amd64$(ARTIFACT_SUFFIX) -v $(MAIN_PATH)
+	GOOS=linux GOARCH=arm64 CGO_ENABLED=0 $(GOBUILD) -o $(BINARY_NAME)_linux-arm64$(ARTIFACT_SUFFIX) -v $(MAIN_PATH)
+	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 $(GOBUILD) -o $(BINARY_NAME)_darwin-amd64$(ARTIFACT_SUFFIX) -v $(MAIN_PATH)
+	GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 $(GOBUILD) -o $(BINARY_NAME)_darwin-arm64$(ARTIFACT_SUFFIX) -v $(MAIN_PATH)
 
 docker-build:
 	docker build -t $(BINARY_NAME):latest -f $(DOCKERFILE_PATH) .
@@ -49,4 +54,4 @@ docker-build:
 tidy:
 	$(GOCMD) mod tidy
 
-.PHONY: all build test clean run deps build-linux docker-build tidy proto
+.PHONY: all build test clean run deps build-release docker-build tidy proto
